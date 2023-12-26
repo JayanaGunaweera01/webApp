@@ -3,18 +3,18 @@
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
-import { deleteAudit } from "@/lib/actions/audit.actions";
+import { deleteThread } from "@/lib/actions/thread.actions";
 
 interface Props {
-  auditId: string;
+  threadId: string;
   currentUserId: string;
   authorId: string;
   parentId: string | null;
   isComment?: boolean;
 }
 
-function DeleteAudit({
-  auditId,
+function DeleteThread({
+  threadId,
   currentUserId,
   authorId,
   parentId,
@@ -33,7 +33,7 @@ function DeleteAudit({
       height={18}
       className='cursor-pointer object-contain'
       onClick={async () => {
-        await deleteAudit(JSON.parse(auditId), pathname);
+        await deleteThread(JSON.parse(threadId), pathname);
         if (!parentId || !isComment) {
           router.push("/");
         }
@@ -42,4 +42,4 @@ function DeleteAudit({
   );
 }
 
-export default DeleteAudit;
+export default DeleteThread;

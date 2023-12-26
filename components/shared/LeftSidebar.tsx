@@ -15,7 +15,7 @@ const LeftSidebar = () => {
 
   return (
     <section className='custom-scrollbar leftsidebar'>
-      <div className='flex w-full flex-1 flex-col gap-2 px-2'>
+      <div className='flex w-full flex-1 flex-col gap-6 px-6'>
         {sidebarLinks.map((link) => {
           const isActive =
             (pathname.includes(link.route) && link.route.length > 1) ||
@@ -27,7 +27,7 @@ const LeftSidebar = () => {
             <Link
               href={link.route}
               key={link.label}
-              className={`leftsidebar_link ${isActive && "bg-emerald-600 text-white "}`}
+              className={`leftsidebar_link ${isActive && "bg-primary-500 "}`}
             >
               <Image
                 src={link.imgURL}

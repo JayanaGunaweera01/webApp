@@ -17,30 +17,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { AuditValidation } from "@/lib/validations/audit";
-import { createAudit } from "@/lib/actions/audit.actions";
+import { ThreadValidation } from "@/lib/validations/thread";
+import { createThread } from "@/lib/actions/thread.actions";
 
 interface Props {
   userId: string;
 }
 
-function PostAudit({ userId }: Props) {
+function PostThread({ userId }: Props) {
   const router = useRouter();
   const pathname = usePathname();
 
   const { organization } = useOrganization();
 
-  const form = useForm<z.infer<typeof AuditValidation>>({
-    resolver: zodResolver(AuditValidation),
+  const form = useForm<z.infer<typeof ThreadValidation>>({
+    resolver: zodResolver(ThreadValidation),
     defaultValues: {
-      audit: "",
+      thread: "",
       accountId: userId,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof AuditValidation>) => {
-    await createAudit({
-      text: values.audit,
+  const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+    await createThread({
+      text: values.thread,
       author: userId,
       communityId: organization ? organization.id : null,
       path: pathname,
@@ -57,7 +57,7 @@ function PostAudit({ userId }: Props) {
       >
         <FormField
           control={form.control}
-          name='audit'
+          name='thread'
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
@@ -71,12 +71,12 @@ function PostAudit({ userId }: Props) {
           )}
         />
 
-        <Button type='submit' className='bg-emerald-600 text-white'>
-          Post Audit
+        <Button type='submit' className='bg-primary-500'>
+          Post Thread
         </Button>
       </form>
     </Form>
   );
 }
 
-export default PostAudit;
+export default PostThread;

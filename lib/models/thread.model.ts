@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const auditSchema = new mongoose.Schema({
+const threadSchema = new mongoose.Schema({
   text: {
     type: String,
     required: true,
@@ -24,11 +24,11 @@ const auditSchema = new mongoose.Schema({
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Audit",
+      ref: "Thread",
     },
   ],
 });
 
-const Audit = mongoose.models.Audit || mongoose.model("Audit", auditSchema);
+const Thread = mongoose.models.Thread || mongoose.model("Thread", threadSchema);
 
-export default Audit;
+export default Thread;

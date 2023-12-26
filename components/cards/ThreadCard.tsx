@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
-import DeleteAudit from "../forms/DeleteAudit";
+import DeleteThread from "../forms/DeleteThread";
 
 interface Props {
   id: string;
@@ -28,7 +28,7 @@ interface Props {
   isComment?: boolean;
 }
 
-function AuditCard({
+function ThreadCard({
   id,
   currentUserId,
   parentId,
@@ -57,7 +57,7 @@ function AuditCard({
               />
             </Link>
 
-            <div className='audit-card_bar' />
+            <div className='thread-card_bar' />
           </div>
 
           <div className='flex w-full flex-col'>
@@ -78,7 +78,7 @@ function AuditCard({
                   height={24}
                   className='cursor-pointer object-contain'
                 />
-                <Link href={`/audit/${id}`}>
+                <Link href={`/thread/${id}`}>
                   <Image
                     src='/assets/reply.svg'
                     alt='heart'
@@ -104,7 +104,7 @@ function AuditCard({
               </div>
 
               {isComment && comments.length > 0 && (
-                <Link href={`/audit/${id}`}>
+                <Link href={`/thread/${id}`}>
                   <p className='mt-1 text-subtle-medium text-gray-1'>
                     {comments.length} repl{comments.length > 1 ? "ies" : "y"}
                   </p>
@@ -114,8 +114,8 @@ function AuditCard({
           </div>
         </div>
 
-        <DeleteAudit
-          auditId={JSON.stringify(id)}
+        <DeleteThread
+          threadId={JSON.stringify(id)}
           currentUserId={currentUserId}
           authorId={author.id}
           parentId={parentId}
@@ -136,7 +136,7 @@ function AuditCard({
             />
           ))}
 
-          <Link href={`/audit/${id}`}>
+          <Link href={`/thread/${id}`}>
             <p className='mt-1 text-subtle-medium text-gray-1'>
               {comments.length} repl{comments.length > 1 ? "ies" : "y"}
             </p>
@@ -167,4 +167,4 @@ function AuditCard({
   );
 }
 
-export default AuditCard;
+export default ThreadCard;

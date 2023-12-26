@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose";
 
 import User from "../models/user.model";
-import Audit from "../models/audit.model";
+import Thread from "../models/thread.model";
 import Community from "../models/community.model";
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
@@ -14,8 +14,8 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   // Calculate the number of posts to skip based on the page number and page size.
   const skipAmount = (pageNumber - 1) * pageSize;
 
-  // Create a query to fetch the posts that have no parent (top-level audits) (a audit that is not a comment/reply).
-  const postsQuery = Audit.find({ parentId: { $in: [null, undefined] } })
+  // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
+  const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
     .sort({ createdAt: "desc" })
     .skip(skipAmount)
     .limit(pageSize)
@@ -36,8 +36,8 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
       },
     });
 
-  // Count the total number of top-level posts (audits) i.e., audits that are not comments.
-  const totalPostsCount = await Audit.countDocuments({
+  // Count the total number of top-level posts (threads) i.e., threads that are not comments.
+  const totalPostsCount = await Thread.countDocuments({
     parentId: { $in: [null, undefined] },
   }); // Get the total count of posts
 
@@ -55,7 +55,7 @@ interface Params {
   path: string,
 }
 
-export async function createAudit({ text, author, communityId, path }: Params
+export async function createThread({ text, author, communityId, path }: Params
 ) {
   try {
     connectToDB();
@@ -65,7 +65,7 @@ export async function createAudit({ text, author, communityId, path }: Params
       { _id: 1 }
     );
 
-    const createdAudit = await Audit.create({
+    const createdThread = await Thread.create({
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
@@ -73,95 +73,95 @@ export async function createAudit({ text, author, communityId, path }: Params
 
     // Update User model
     await User.findByIdAndUpdate(author, {
-      $push: { audits: createdAudit._id },
+      $push: { threads: createdThread._id },
     });
 
     if (communityIdObject) {
       // Update Community model
       await Community.findByIdAndUpdate(communityIdObject, {
-        $push: { audits: createdAudit._id },
+        $push: { threads: createdThread._id },
       });
     }
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to create audit: ${error.message}`);
+    throw new Error(`Failed to create thread: ${error.message}`);
   }
 }
 
-async function fetchAllChildAudits(auditId: string): Promise<any[]> {
-  const childAudits = await Audit.find({ parentId: auditId });
+async function fetchAllChildThreads(threadId: string): Promise<any[]> {
+  const childThreads = await Thread.find({ parentId: threadId });
 
-  const descendantAudits = [];
-  for (const childAudit of childAudits) {
-    const descendants = await fetchAllChildAudits(childAudit._id);
-    descendantAudits.push(childAudit, ...descendants);
+  const descendantThreads = [];
+  for (const childThread of childThreads) {
+    const descendants = await fetchAllChildThreads(childThread._id);
+    descendantThreads.push(childThread, ...descendants);
   }
 
-  return descendantAudits;
+  return descendantThreads;
 }
 
-export async function deleteAudit(id: string, path: string): Promise<void> {
+export async function deleteThread(id: string, path: string): Promise<void> {
   try {
     connectToDB();
 
-    // Find the audit to be deleted (the main audit)
-    const mainAudit = await Audit.findById(id).populate("author community");
+    // Find the thread to be deleted (the main thread)
+    const mainThread = await Thread.findById(id).populate("author community");
 
-    if (!mainAudit) {
-      throw new Error("Audit not found");
+    if (!mainThread) {
+      throw new Error("Thread not found");
     }
 
-    // Fetch all child audits and their descendants recursively
-    const descendantAudits = await fetchAllChildAudits(id);
+    // Fetch all child threads and their descendants recursively
+    const descendantThreads = await fetchAllChildThreads(id);
 
-    // Get all descendant audit IDs including the main audit ID and child audit IDs
-    const descendantAuditIds = [
+    // Get all descendant thread IDs including the main thread ID and child thread IDs
+    const descendantThreadIds = [
       id,
-      ...descendantAudits.map((audit) => audit._id),
+      ...descendantThreads.map((thread) => thread._id),
     ];
 
     // Extract the authorIds and communityIds to update User and Community models respectively
     const uniqueAuthorIds = new Set(
       [
-        ...descendantAudits.map((audit) => audit.author?._id?.toString()), // Use optional chaining to handle possible undefined values
-        mainAudit.author?._id?.toString(),
+        ...descendantThreads.map((thread) => thread.author?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainThread.author?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
     const uniqueCommunityIds = new Set(
       [
-        ...descendantAudits.map((audit) => audit.community?._id?.toString()), // Use optional chaining to handle possible undefined values
-        mainAudit.community?._id?.toString(),
+        ...descendantThreads.map((thread) => thread.community?._id?.toString()), // Use optional chaining to handle possible undefined values
+        mainThread.community?._id?.toString(),
       ].filter((id) => id !== undefined)
     );
 
-    // Recursively delete child audits and their descendants
-    await Audit.deleteMany({ _id: { $in: descendantAuditIds } });
+    // Recursively delete child threads and their descendants
+    await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
 
     // Update User model
     await User.updateMany(
       { _id: { $in: Array.from(uniqueAuthorIds) } },
-      { $pull: { audits: { $in: descendantAuditIds } } }
+      { $pull: { threads: { $in: descendantThreadIds } } }
     );
 
     // Update Community model
     await Community.updateMany(
       { _id: { $in: Array.from(uniqueCommunityIds) } },
-      { $pull: { audits: { $in: descendantAuditIds } } }
+      { $pull: { threads: { $in: descendantThreadIds } } }
     );
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to delete audit: ${error.message}`);
+    throw new Error(`Failed to delete thread: ${error.message}`);
   }
 }
 
-export async function fetchAuditById(auditId: string) {
+export async function fetchThreadById(threadId: string) {
   connectToDB();
 
   try {
-    const audit = await Audit.findById(auditId)
+    const thread = await Thread.findById(threadId)
       .populate({
         path: "author",
         model: User,
@@ -182,7 +182,7 @@ export async function fetchAuditById(auditId: string) {
           },
           {
             path: "children", // Populate the children field within children
-            model: Audit, // The model of the nested children (assuming it's the same "Audit" model)
+            model: Thread, // The model of the nested children (assuming it's the same "Thread" model)
             populate: {
               path: "author", // Populate the author field within nested children
               model: User,
@@ -193,15 +193,15 @@ export async function fetchAuditById(auditId: string) {
       })
       .exec();
 
-    return audit;
+    return thread;
   } catch (err) {
-    console.error("Error while fetching audit:", err);
-    throw new Error("Unable to fetch audit");
+    console.error("Error while fetching thread:", err);
+    throw new Error("Unable to fetch thread");
   }
 }
 
-export async function addCommentToAudit(
-  auditId: string,
+export async function addCommentToThread(
+  threadId: string,
   commentText: string,
   userId: string,
   path: string
@@ -209,28 +209,28 @@ export async function addCommentToAudit(
   connectToDB();
 
   try {
-    // Find the original audit by its ID
-    const originalAudit = await Audit.findById(auditId);
+    // Find the original thread by its ID
+    const originalThread = await Thread.findById(threadId);
 
-    if (!originalAudit) {
-      throw new Error("Audit not found");
+    if (!originalThread) {
+      throw new Error("Thread not found");
     }
 
-    // Create the new comment audit
-    const commentAudit = new Audit({
+    // Create the new comment thread
+    const commentThread = new Thread({
       text: commentText,
       author: userId,
-      parentId: auditId, // Set the parentId to the original audit's ID
+      parentId: threadId, // Set the parentId to the original thread's ID
     });
 
-    // Save the comment audit to the database
-    const savedCommentAudit = await commentAudit.save();
+    // Save the comment thread to the database
+    const savedCommentThread = await commentThread.save();
 
-    // Add the comment audit's ID to the original audit's children array
-    originalAudit.children.push(savedCommentAudit._id);
+    // Add the comment thread's ID to the original thread's children array
+    originalThread.children.push(savedCommentThread._id);
 
-    // Save the updated original audit to the database
-    await originalAudit.save();
+    // Save the updated original thread to the database
+    await originalThread.save();
 
     revalidatePath(path);
   } catch (err) {

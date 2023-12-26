@@ -32,19 +32,12 @@ export function formatDateString(dateString: string) {
 }
 
 // created by chatgpt
-export function formatAuditCount(count: number): string {
+export function formatThreadCount(count: number): string {
   if (count === 0) {
-    return "No Audits";
+    return "No Threads";
   } else {
-    const auditCount = count.toString().padStart(2, "0");
-    const auditWord = count === 1 ? "Audit" : "Audits";
-    return `${auditCount} ${auditWord}`;
+    const threadCount = count.toString().padStart(2, "0");
+    const threadWord = count === 1 ? "Thread" : "Threads";
+    return `${threadCount} ${threadWord}`;
   }
 }
-
-export function convertToAscii(inputString: string) {
-  // remove non ascii characters
-  const asciiString = inputString.replace(/[^\x00-\x7F]+/g, "");
-  return asciiString;
-}
-
