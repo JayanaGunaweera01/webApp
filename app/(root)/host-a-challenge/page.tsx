@@ -1,54 +1,62 @@
-import ChatComponent from "@/components/ChatComponent";
-import ChatSideBar from "@/components/ChatSideBar";
-import PDFViewer from "@/components/PDFViewer";
-import { db } from "@/lib/db";
-import { chats } from "@/lib/db/schema";
-import { checkSubscription } from "@/lib/subscription";
-import { auth } from "@clerk/nextjs";
-import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import React from "react";
+import { currentUser } from "@clerk/nextjs";
 
-type Props = {
-  params: {
-    chatId: string;
-  };
-};
+import UserCard from "@/components/cards/UserCard";
+import Searchbar from "@/components/shared/Searchbar";
+import Pagination from "@/components/shared/Pagination";
 
-const ChatPage = async ({ params: { chatId } }: Props) => {
-  const { userId } = await auth();
-  if (!userId) {
-    return redirect("/sign-in");
-  }
-  const _chats = await db.select().from(chats).where(eq(chats.userId, userId));
-  if (!_chats) {
-    return redirect("/");
-  }
-  if (!_chats.find((chat) => chat.id === parseInt(chatId))) {
-    return redirect("/");
-  }
+import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 
-  const currentChat = _chats.find((chat) => chat.id === parseInt(chatId));
-  const isPro = await checkSubscription();
+async function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+  if (!userInfo?.onboarded) redirect("/onboarding");
+
+  const result = await fetchUsers({
+    userId: user.id,
+    searchString: searchParams.q,
+    pageNumber: searchParams?.page ? +searchParams.page : 1,
+    pageSize: 25,
+  });
 
   return (
-    <div className="flex max-h-screen overflow-scroll">
-      <div className="flex w-full max-h-screen overflow-scroll">
-        {/* chat sidebar */}
-        <div className="flex-[1] max-w-xs">
-          <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro ? true : false} />
-        </div>
-        {/* pdf viewer */}
-        <div className="max-h-screen p-4 oveflow-scroll flex-[5]">
-          <PDFViewer pdf_url={currentChat?.pdfUrl || ""} />
-        </div>
-        {/* chat component */}
-        <div className="flex-[3] border-l-4 border-l-slate-200">
-          <ChatComponent chatId={parseInt(chatId)} />
-        </div>
-      </div>
-    </div>
-  );
-};
+    <section>
+      <h1 className='head-text mb-10'>Search</h1>
 
-export default ChatPage;
+      <Searchbar routeType='search' />
+
+      <div className='mt-14 flex flex-col gap-9'>
+        {result.users.length === 0 ? (
+          <p className='no-result'>No Result</p>
+        ) : (
+          <>
+            {result.users.map((person) => (
+              <UserCard
+                key={person.id}
+                id={person.id}
+                name={person.name}
+                username={person.username}
+                imgUrl={person.image}
+                personType='User'
+              />
+            ))}
+          </>
+        )}
+      </div>
+
+      <Pagination
+        path='search'
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
+    </section>
+  );
+}
+
+export default Page;

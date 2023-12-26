@@ -1,4 +1,3 @@
-"use client";
 import { OrganizationSwitcher, SignedIn, SignOutButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Image from "next/image";
@@ -19,32 +18,30 @@ function Topbar() {
           />
           <p className="text-heading3-bold max-xs:hidden">EthAIAuditHub</p>
         </div>
-      </Link>{}
+      </Link>
 
       {/* Navigation links */}
-        {/* Navigation links */}
-        <div className="flex items-center space-x-12 md:space-x-12">
-          {/* Use space-x instead of gap for consistent spacing */}
-          <Link href="https://github.com/JayanaGunaweera01/EthAIAuditHub">
-            <button className="bg-blue-500 text-white border-2 border-blue-500 px-6 py-3 rounded-full transition duration-300 ease-in-out hover:bg-teal-600">
-              Try An Audit
-            </button>
-          </Link>
-
-          <Link href="/host-a-challenge">
-            <button className="bg-blue-500 text-white border-2 border-blue-500 px-6 py-3 rounded-full transition duration-300 ease-in-out hover:bg-teal-700">
-              Host A Challenge
-            </button>
-          </Link>
-
-          <Link href="https://medium.com/@jguwera98">
-            <button className="bg-blue-500 text-white border-2 border-blue-500 px-6 py-3 rounded-full transition duration-300 ease-in-out hover:bg-teal-800">
-              Read Blogs
-            </button>
-          </Link>
-        </div>
-
-
+      <div className="flex items-center space-x-28">
+        {/* Use space-x instead of gap for consistent spacing */}
+        <Link href="https://github.com/Trusted-AI/AIF360" className="button button-green hover:bg-green-600">
+          Try An Audit
+        </Link>
+        <Link href="/audit-chat" className="button button-red hover:bg-red-600">
+          Audit Chat
+        </Link>
+        <Link
+          href="/host-a-challenge"
+          className="button button-yellow hover:bg-yellow-600"
+        >
+           Host A Challenge
+        </Link>
+        <Link
+          href={`https://medium.com/@jguwera98`}
+          className="button button-purple hover:bg-purple-600"
+        >
+          Read Blogs
+        </Link>
+      </div>
 
       {/* User actions */}
       <div className="flex items-center gap-4">
