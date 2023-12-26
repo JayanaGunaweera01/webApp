@@ -4,7 +4,7 @@ import { FilterQuery, SortOrder } from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import Community from "../models/community.model";
-import Thread from "../models/thread.model";
+import Audit from "../models/audit.model";
 import User from "../models/user.model";
 
 import { connectToDB } from "../mongoose";
@@ -66,10 +66,10 @@ export async function fetchUserPosts(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads authored by the user with the given userId
-    const threads = await User.findOne({ id: userId }).populate({
-      path: "threads",
-      model: Thread,
+    // Find all audits authored by the user with the given userId
+    const audits = await User.findOne({ id: userId }).populate({
+      path: "audits",
+      model: Audit,
       populate: [
         {
           path: "community",
@@ -78,7 +78,7 @@ export async function fetchUserPosts(userId: string) {
         },
         {
           path: "children",
-          model: Thread,
+          model: Audit,
           populate: {
             path: "author",
             model: User,
@@ -87,9 +87,9 @@ export async function fetchUserPosts(userId: string) {
         },
       ],
     });
-    return threads;
+    return audits;
   } catch (error) {
-    console.error("Error fetching user threads:", error);
+    console.error("Error fetching user audits:", error);
     throw error;
   }
 }
@@ -157,18 +157,18 @@ export async function getActivity(userId: string) {
   try {
     connectToDB();
 
-    // Find all threads created by the user
-    const userThreads = await Thread.find({ author: userId });
+    // Find all audits created by the user
+    const userAudits = await Audit.find({ author: userId });
 
-    // Collect all the child thread ids (replies) from the 'children' field of each user thread
-    const childThreadIds = userThreads.reduce((acc, userThread) => {
-      return acc.concat(userThread.children);
+    // Collect all the child audit ids (replies) from the 'children' field of each user audit
+    const childAuditIds = userAudits.reduce((acc, userAudit) => {
+      return acc.concat(userAudit.children);
     }, []);
 
-    // Find and return the child threads (replies) excluding the ones created by the same user
-    const replies = await Thread.find({
-      _id: { $in: childThreadIds },
-      author: { $ne: userId }, // Exclude threads authored by the same user
+    // Find and return the child audits (replies) excluding the ones created by the same user
+    const replies = await Audit.find({
+      _id: { $in: childAuditIds },
+      author: { $ne: userId }, // Exclude audits authored by the same user
     }).populate({
       path: "author",
       model: User,
