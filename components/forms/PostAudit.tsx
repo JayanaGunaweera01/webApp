@@ -71,7 +71,7 @@ function PostAudit({ userId }: Props) {
           )}
         />
 
-        <Button type='submit' className='bg-primary-500'>
+        <Button type='submit' className='bg-emerald-600 text-white'>
           Post Audit
         </Button>
       </form>

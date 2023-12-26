@@ -30,12 +30,12 @@ export const sidebarLinks = [
     label: "Profile",
   },
   {
-    imgURL: "/assets/user.svg",
-    route: "/message",
-    label: "Message",
+    imgURL: "/assets/chat.svg",
+    route: "/audit-report",
+    label: "Audit Chat",
   },
   {
-    imgURL: "/assets/user.svg",
+    imgURL: "/assets/point.svg",
     route: "/points",
     label: "Points",
   },
