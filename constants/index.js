@@ -29,16 +29,7 @@ export const sidebarLinks = [
     route: "/profile",
     label: "Profile",
   },
-  {
-    imgURL: "/assets/chat.svg",
-    route: "/audit-report",
-    label: "Audit Chat",
-  },
-  {
-    imgURL: "/assets/point.svg",
-    route: "/points",
-    label: "Points",
-  },
+
 ];
 
 export const profileTabs = [
