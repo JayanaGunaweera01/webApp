@@ -31,9 +31,9 @@ function Topbar() {
             </button>
           </Link>
 
-          <Link href="/host-a-challenge">
+          <Link href="https://open-ai-chat-audit.vercel.app/">
             <button className="bg-blue-500 text-white border-2 border-blue-500 px-6 py-3 rounded-full transition duration-300 ease-in-out hover:bg-teal-700">
-              Host A Challenge
+              Open AI Audit
             </button>
           </Link>
 
