@@ -2,7 +2,7 @@
 
 ## Workflow Status
 
-[![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/docker-image.yml.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
+[![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/docker-image.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
 
 ## Objective
 This repository contains a comprehensive Automated Auditing Framework for AI systems, designed to ensure transparency, fairness, and accountability in the development and deployment of AI models.
