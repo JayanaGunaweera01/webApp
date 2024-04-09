@@ -5,13 +5,18 @@ Welcome to EthAIAuditHub - An Automated, Collaborative, ethical Bias Auditing Pl
 
 [![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/docker-image.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
 
-[![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/CodeQL.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
+[CodeQL](https://github.com/JayanaGunaweera01/rese
+arch/actions/workflows/codeql.yml/badge.svg
+?branch=main&event=push)]
+(https://github.com/JayanaGunaweera01/rese
+arch/actions/workflows/codeql.yml) 
 
 [![Workflow Status](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions/workflows/.github/workflows/bias-mitigation-automation.yml/badge.svg)](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions)
 
 [![Workflow Status](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions/workflows/.github/workflows/ethaiaudithub-experiment-workflow.yml/badge.svg)](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions)
 
-http://web-83tj6loap-jayana-gunaweeras-projects.vercel.app/?app=web-83tj6loap-jayana-gunaweeras-projects-vercel-badge&style=for-the-badge&logo=none
+
+![Vercel](http://web-83tj6loap-jayana-gunaweeras-projects.vercel.app/?app=web-83tj6loap-jayana-gunaweeras-projects.-vercel-badge) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 
 ## Objective
