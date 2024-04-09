@@ -33,7 +33,8 @@ Experience a better UX with automatically executed log reports
 1. Clone the repository:
 
     ```bash
-    click https://web-app-delta-wheat.vercel.app/
+    click [here](https://web-app-delta-wheat.vercel.app/)
     ```
+
 
 
