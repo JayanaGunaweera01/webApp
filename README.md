@@ -5,6 +5,8 @@ Welcome to EthAIAuditHub - An Automated, Collaborative, ethical Bias Auditing Pl
 
 [![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/docker-image.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
 
+[![Workflow Status](https://github.com/JayanaGunaweera01/webApp/actions/workflows/.github/workflows/CodeQL.yml/badge.svg)](https://github.com/JayanaGunaweera01/webApp/actions)
+
 [![Workflow Status](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions/workflows/.github/workflows/bias-mitigation-automation.yml/badge.svg)](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions)
 
 [![Workflow Status](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions/workflows/.github/workflows/ethaiaudithub-experiment-workflow.yml/badge.svg)](https://github.com/JayanaGunaweera01/EthAIAuditHub/actions)
