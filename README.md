@@ -12,6 +12,9 @@ Welcome to EthAIAuditHub - An Automated, Collaborative, ethical Bias Auditing Pl
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 
+## Demo Video
+https://youtu.be/8mE_vLP9TYc
+
 ## Objective
 This repository contains a comprehensive Automated Auditing Framework for AI systems, designed to ensure transparency, fairness, and accountability in the development and deployment of ML models. By developing a meaningful automated platform with an AI assistant for addressing biases in algorithmic models, the developer aims at mitigating ethical bias which are not just technical glitches; but are societal challenges that necessitate collective attention and thoughtful solutions. 
 
